@@ -1,0 +1,637 @@
+{
+    "formats":{
+        "comando": {
+            "header": "$",
+            "server": {
+                "comando": {"type": "char"},
+                "id": {"type": "string"},
+                "value": {"type": "string"}
+            },
+            "client": {
+                "comando": {"type": "char"},
+                "id": {"type": "string"},
+                "value": {"type": "string"}
+            }
+        },
+        "login": {
+            "header": "T",
+            "client": {
+                "serial": {"type": "string"}
+            },
+             "server": {
+                 "id": {"bytes": 2, "type": "id"},
+                 "padron": {"bytes": 2, "type": "id"},
+                 "route": {"bytes": 1, "type": "id"},
+                 "direction": {"type": "bool"},
+                 "geofence": {"bytes": 2, "type": "id"},
+                 "state": {"type": "char"},
+                 "trip": {"bytes": 4, "type": "id"},
+                 "driver": {"bytes": 4, "type": "id"},
+                 "order": {"bytes": 1, "type": "unsigned"},
+                 "logged": {"type": "bool"},
+                 "data": {"type": "datetime"},
+                 "schedule": {"type": "time"},
+                 "display": {"type": "bool"}
+             }
+        },
+        "report": {
+            "header": "P",
+            "client": {
+                "positions": {
+                    "type": "array", "array": {
+                        "time": {"type": "datetime"},
+                        "lng": {"bytes": 4, "type": "float", "decimals": 6},
+                        "lat": {"bytes": 4, "type": "float", "decimals": 6},
+                        "speed": {"bytes": 1, "type": "unsigned"},
+                        "mark": {"bytes": 2, "type": "id"},
+                        "busstop": {"bytes": 2, "type": "id"}
+                    }
+                },
+                "trip": {"bytes": 4, "type": "id"},
+                "route": {"bytes": 1, "type": "id"},
+                "direction": {"type": "bool"},
+                "state": {"type": "char"},
+                "boletos": {
+                    "type": "array", "array": {
+                        "id": { "bytes": 2, "type": "unsigned"},
+                        "cantidad": {"bytes": 2, "type": "unsigned"}
+                    }
+                },
+                "events": {"type": "array", "array": {
+                    "id": {"bytes": 2, "type": "unsigned"},
+                    "value": {"bytes": 1, "type": "unsigned"}}
+                }
+            },
+            "server": {
+                "positions": {"bytes":  1, "type":  "unsigned"}
+            }
+        },
+        "report&events": {
+            "header": "PV",
+            "client": {
+                "positions": {
+                    "type": "array", "array": {
+                        "time": {"type": "datetime"},
+                        "lng": {"bytes": 4, "type": "float", "decimals": 6},
+                        "lat": {"bytes": 4, "type": "float", "decimals": 6},
+                        "speed": {"bytes": 1, "type": "unsigned"},
+                        "mark": {"bytes": 2, "type": "id"},
+                        "busstop": {"bytes": 2, "type": "id"}
+                    }
+                },
+                "trip": {"bytes": 4, "type": "id"},
+                "route": {"bytes": 1, "type": "id"},
+                "direction": {"type": "bool"},
+                "state": {"type": "char"},
+                "sales": {"bytes": 3, "type": "unsigned"},
+                "events": {"type": "array", "array": {
+                    "id": {"bytes": 2, "type": "unsigned"},
+                    "value": {"bytes": 1, "type": "unsigned"}}
+                }
+            },
+            "server": {
+                "positions": {"bytes":  1, "type":  "unsigned"}
+            }
+        },
+        "status": {
+            "header": "ST",
+            "client": {
+                "version": {"bytes": 1, "type": "unsigned"}
+            },
+            "server": {
+                "status": {"type": "char"},
+                "direction": {"type": "char"},
+                "next_next_control": {"type": "string"},
+                "next_next_time": {"type": "char", "bytes": 5},
+                "next_control": {"type": "string"},
+                "next_time": {"type": "char", "bytes": 5},
+                "previous_control": {"type": "string"},
+                "delay": {"type": "signed", "bytes": 1},
+                "front_control": {"type": "string"},
+                "back_control": {"type": "string"},
+                "back_back_control": {"type": "string"},
+                "datero_bus_-1": {"type": "unsigned", "bytes": 2},
+                "datero_dif_-1": {"type": "unsigned", "bytes": 1},
+                "datero_bus_0": {"type": "unsigned", "bytes": 2},
+                "datero_dif_0": {"type": "unsigned", "bytes": 1},
+                "datero_bus_1": {"type": "unsigned", "bytes": 2},
+                "datero_dif_1": {"type": "unsigned", "bytes": 1},
+                "datero_bus_2": {"type": "unsigned", "bytes": 2},
+                "datero_dif_2": {"type": "unsigned", "bytes": 1},
+                "datero_bus_3": {"type": "unsigned", "bytes": 2},
+                "datero_dif_3": {"type": "unsigned", "bytes": 1},
+                "datero_bus_4": {"type": "unsigned", "bytes": 2},
+                "datero_dif_4": {"type": "unsigned", "bytes": 1},
+                "datero_bus_5": {"type": "unsigned", "bytes": 2},
+                "datero_dif_5": {"type": "unsigned", "bytes": 1}
+            }
+        },
+        "error": {
+            "header": "E",
+            "client": {
+                "error": {"bytes": 0, "type": "string"}
+            },
+            "server": {
+                "error": {"bytes": 0, "type": "string"}
+            }
+        },
+        "backward_datero": {
+            "header": "g",
+            "server": {
+                "geofence": {"bytes": 2, "type":  "unsigned"},
+                "orden": {"bytes": 0, "type": "unsigned"},
+                "delta": {"bytes": 1, "type":  "unsigned"},
+                "pad": {"bytes": 2, "type": "unsigned"},
+                "id": {"bytes": 0, "type": "string"}
+            },
+            "client": {
+                "id": {"bytes": 0, "type": "string"}
+            }
+        },
+        "forward_datero": {
+            "header": "G",
+            "server": {
+                "geofence": {"bytes": 4, "type": "unsigned"},
+                "trip": {"bytes": 4, "type": "unsigned"},
+                "time": {"bytes": 6, "type": "datetime"},
+                "dateros": {"type": "array", "array": {
+                        "padron": {"bytes": 2, "type": "unsigned"},
+                        "delta": {"bytes": 1, "type": "unsigned"}}
+                    }
+                },
+            "client": {
+                "id": {"bytes": 0, "type": "string"}
+            }
+
+        },
+        "avl_config":{
+            "header": "C",
+            "server":{
+                "id": {"type": "string"},
+                "vehicle": {"bytes": 2, "type": "unsigned"},
+                "command": {"type": "string"},
+                "config": {"type": "string"}
+            },
+            "client": {
+                "id": {"type": "string"}
+            }
+        },
+        "message": {
+            "header": "M",
+            "client": {
+                "id": {"bytes": 4, "type": "unsigned"},
+                "read": {"bytes": 1, "type": "bool"}
+            },
+            "server": {
+                "id": {"bytes": 4, "type": "unsigned"},
+                "text": {"type": "string"}
+            }
+        },
+        "recv_read_message": {
+            "header": "MK",
+            "server": {
+                "id": {"bytes": 4, "type": "unsigned"},
+                "read": {"bytes": 0, "type": "bool"}
+            },
+            "client": {
+                "id": {"bytes": 4, "type": "unsigned"},
+                "read": {"bytes": 0, "type": "bool"}
+            }
+        },
+        "delete_operation": {
+            "header": "OPD",
+            "server": {
+                "id": {"bytes": 4, "type": "unsigned"}
+            },
+            "client": {
+                "id": {"bytes": 4, "type": "unsigned"}
+            }
+        },
+        "delete_back_datero": {
+            "header": "gk",
+            "server": {
+                "id": {"bytes": 4, "type": "unsigned"}
+            },
+            "client": {
+                "id": {"bytes": 4, "type": "unsigned"}
+            }
+        },
+        "delete_front_datero": {
+            "header": "Gk",
+            "server": {
+                "id": {"bytes": 4, "type": "unsigned"}
+            },
+            "client": {
+                "id": {"bytes": 4, "type": "unsigned"}
+            }
+        },
+        "itinerario": {
+            "header": "I",
+            "client": {
+                "salida": {"bytes": 4, "type": "unsigned"},
+                "controles": {"type": "array", "array": {
+                    "geocerca": {"bytes": 2, "type": "unsigned"}
+                }}
+            },
+            "server": {
+                "id": {"bytes": 4, "type": "unsigned"},
+                "inicio":{"bytes": 6, "type": "timestamp"},
+                "controles": {"type": "array", "array": {
+                    "geocerca": {"bytes": 2, "type": "unsigned"},
+                    "tiempo": {"bytes": 2, "type": "signed"},
+                    "volada": {"bytes": 2, "type": "signed"}
+                }}
+
+            }
+        },
+        "refrequency": {
+            "header": "RF",
+            "client": {
+                "salida": {"bytes": 4, "type": "unsigned"}
+            },
+            "server": {
+                "trip": {"bytes": 4, "type": "unsigned"},
+                "geofences": {"type": "array", "array": {
+                    "id": {"bytes": 2, "type": "unsigned"}
+                }}
+            }
+        },
+        "salida": {
+            "header": "S",
+            "client": {
+                "salida": {"bytes": 4, "type": "unsigned"}
+            },
+            "server": {
+                "id": {"bytes": 4, "type": "unsigned"},
+                "ruta": {"bytes": 1, "type": "unsigned"},
+                "lado": {"bytes": 1, "type": "bool"},
+                "inicio" : {"bytes": 6, "type": "datetime"},
+                "estado" : { "bytes": 1, "type": "char"},
+                "frecuencia" : { "bytes": 1, "type": "unsigned"},
+                "conductor" : { "bytes": 4, "type": "unsigned"},
+                "geocerca" : { "bytes": 2, "type": "unsigned"},
+                "marcados": {"bytes": 0, "type": "bits"},
+                "controles": {"type": "array", "array": {
+                    "geocerca": {"bytes": 2, "type": "unsigned"},
+                    "tiempo": {"bytes": 2, "type": "signed"},
+                    "volada": {"bytes": 2, "type": "signed"}
+                    }
+                }
+            }
+        },
+        "driver_login": {
+            "header": "LI",
+            "client": {
+                "key": {"type": "string"},
+                "dni": {"type": "string"},
+                "direction": {"bytes": 1, "type": "bool"},
+                "route": {"bytes": 1, "type": "unsigned"},
+                "vehicle": {"bytes": 2, "type": "unsigned"}
+            },
+            "server": {
+                "error": {"type": "bool"},
+                "title": {"type": "string"},
+                "message": {"type": "string"},
+                "sessions": {"type": "array", "array": {
+                    "id": {"bytes": 4, "type": "id"},
+                    "driver_id": {"bytes": 2, "type": "id"},
+                    "driver_code": {"type": "string"},
+                    "activo,castigado,conductor,vencido": {"type": "flags"},
+                    "route": {"bytes": 1, "type": "unsigned"},
+                    "direction": {"type": "bool"},
+                    "start_time": {"bytes": 6, "type": "datetime"}
+                }}
+
+            }
+        },
+        "driver_logout": {
+            "header": "LO",
+            "client": {
+                "session": {"bytes": 4, "type": "unsigned"},
+                "vehicle": {"bytes": 2, "type": "unsigned"},
+                "end_time": {"bytes": 6, "type": "datetime"},
+                "production": {"bytes": 4, "type": "unsigned"},
+                "first": {"bytes": 4, "type": "unsigned"},
+                "last": {"bytes": 4, "type": "unsigned"},
+                "resume": {"type":"array", "array": {
+                    "fare": {"bytes":2, "type": "unsigned"},
+                    "start": {"bytes": 2, "type":  "unsigned"},
+                    "end": {"bytes": 2, "type":  "unsigned"},
+                    "deleted": {"type": "array", "array": {
+                        "number": {"bytes":4, "type": "unsigned"}
+                    }},
+                    "cash": {"bytes":2, "type": "unsigned"},
+                    "turuta": {"bytes":2, "type": "unsigned"},
+                    "niubiz": {"bytes":2, "type": "unsigned"},
+                    "tutarjeta": {"bytes":2, "type": "unsigned"}
+                }}
+            },
+            "server": {
+                "error": {"type": "bool"},
+                "title": {"type": "string"},
+                "message": {"type": "string"},
+                "id": {"bytes": 4, "type": "unsigned"}
+            }
+        },
+
+        "tickets": {
+            "header": "V",
+            "client": {
+                "tickets": {"type":  "array", "array":  {
+                    "fare": {"bytes": 2, "type": "id"},
+                    "driver": {"bytes": 2, "type": "id"},
+                    "correlative": {"bytes": 4, "type": "unsigned"},
+                    "day": {"bytes": 3, "type": "date"},
+                    "busstop_end": {"bytes": 2, "type": "id"},
+                    "time": {"bytes": 6, "type": "datetime"},
+                    "busstop_start": {"bytes": 4, "type": "id"},
+                    "inspector": {"bytes": 2, "type": "id"},
+                    "payment_method": {"bytes": 1, "type": "id"},
+                    "number": {"bytes": 4, "type": "unsigned"},
+                    "price": {"bytes": 2, "type": "unsigned"},
+                    "route": {"bytes": 1, "type": "id"},
+                    "session": {"bytes": 4, "type": "id"},
+                    "vehicle": {"bytes": 2, "type": "id"},
+                    "card": {"type": "string"}
+                }}
+            },
+            "server": {
+                "tickets": {"type":  "array", "array":  {
+                    "correlative": {"bytes": 4, "type": "unsigned"},
+                    "id": {"type": "string"}
+                }}
+            }
+        },
+        "operation": {
+            "header": "OP",
+            "server": {
+                "id":{ "bytes": 0, "type": "string"},
+                "section":{ "bytes": 0, "type": "string"},
+                "key": {"bytes": 0, "type": "string"},
+                "value": {"bytes": 0, "type": "string"}
+            },
+            "client": {
+                "id": {"bytes": 0, "type": "string"}
+            }
+        },
+
+        "timestamp": {
+            "header": "#T",
+            "server": {
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "tabla": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "timestamp_us": {
+            "header": "#t",
+            "server": {
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "tabla": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "timestamp":{"bytes": 8, "type": "timestamp"}
+            }
+        },
+        "remaining_data": {
+            "header": "#RD",
+            "server": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "remaining_data_t": {
+            "header": "#rd",
+            "server": {
+                 "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"}
+
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"}
+
+            }
+        },
+        "user_route": {
+            "header": "U",
+            "server": {
+                "id": {"bytes": 2, "type": "unsigned"},
+                "celular": {"bytes": 9, "type": "string"},
+                "nombre": {"bytes": 14, "type": "string"},
+                "rutas": {"type": "array", "array": {
+                    "ruta": {"bytes": 1, "type": "unsigned"}
+                }},
+                "timestamp":{"bytes": 6, "type": "datetime"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+
+        },
+        "history_user_route": {
+            "header": "#U",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "id": {"bytes": 2, "type": "unsigned"},
+                        "celular": {"bytes": 9, "type": "string"},
+                        "nombre": {"bytes": 14, "type": "string"},
+                        "rutas": {"type": "array", "array": {
+                            "ruta": {"bytes": 1, "type": "unsigned"}
+                        }},
+                        "type": {"bytes": 1, "type": "char"},
+                        "timestamp":{"bytes": 6, "type": "datetime"}
+                    }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "history_user_route_us": {
+            "header": "#u",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "id": {"bytes": 2, "type": "unsigned"},
+                        "celular": {"bytes": 9, "type": "string"},
+                        "nombre": {"bytes": 14, "type": "string"},
+                        "rutas": {"type": "array", "array": {
+                            "ruta": {"bytes": 1, "type": "unsigned"}
+                        }},
+                        "type": {"bytes": 1, "type": "char"},
+                        "timestamp":{"bytes": 8, "type": "datetime"}
+                    }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "history_fare": {
+            "header": "#B",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "id": {"bytes": 2, "type": "unsigned"},
+                        "color": {"bytes": 7, "type": "string"},
+                        "orden": {"bytes": 1, "type": "unsigned"},
+                        "nombre": {"bytes": 13, "type": "string"},
+                        "activo,reintegro" : {"bytes": 1, "type": "flags"},
+                        "lunes,martes,miercoles,jueves,viernes,sabado,domingo,feriado" : {"bytes": 1, "type": "flags"},
+                        "ruta": {"bytes": 2, "type": "unsigned"},
+                        "tarifa": {"bytes": 2, "type": "float", "decimals": 2},
+                        "type": {"bytes": 1, "type": "char"},
+                        "timestamp":{"bytes": 6, "type": "datetime"}
+                    }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "history_route_settings": {
+            "header": "#C",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "id": {"bytes": 2, "type": "unsigned"},
+                        "nombre": {"bytes": 0, "type": "string"},
+                        "ruta": {"bytes": 1, "type": "unsigned"},
+                        "tipo": {"bytes": 0, "type": "string"},
+                        "data": {"bytes": 0, "type": "string"},
+
+                        "type": {"bytes": 1, "type": "char"},
+                        "timestamp":{"bytes": 6, "type": "datetime"}
+                    }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "history_geofence": {
+            "header": "#G",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "id": {"bytes": 2, "type": "unsigned"},
+                        "orden" : {"bytes": 1, "type": "unsigned"},
+                        "longitud": {"bytes": 4, "type": "float", "decimals": 6},
+                        "latitud": {"bytes": 4, "type": "float", "decimals": 6},
+                        "radio": {"bytes": 2, "type": "unsigned"},
+                        "ruta": {"bytes": 1, "type": "unsigned"},
+                        "lado,control,datear,activo": {"type": "flags"},
+                        "nombre": {"bytes": 15, "type": "string"},
+                        "type": {"bytes": 1, "type": "char"},
+                        "timestamp":{"bytes": 6, "type": "datetime"}
+                    }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "history_busstop": {
+            "header": "#P",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "id": {"bytes": 2, "type": "unsigned"},
+                        "orden" : {"bytes": 1, "type": "unsigned"},
+                        "lng": {"bytes": 4, "type": "float", "decimals": 6},
+                        "lat": {"bytes": 4, "type": "float", "decimals": 6},
+                        "radio": {"bytes": 2, "type": "unsigned"},
+                        "ruta": {"bytes": 1, "type": "unsigned"},
+                        "liquidar,lado,terminal,activo": {"bytes": 1, "type": "flags"},
+                        "nombre": {"bytes": 14, "type": "string"},
+                        "velocidad": {"bytes": 1, "type": "unsigned"},
+                        "tarifas": {"bytes": 0, "type": "array", "array":{
+                            "boleto": {"bytes": 2, "type": "unsigned"},
+                            "fin": {"bytes": 2, "type": "unsigned"}
+                        },
+                        "timestamp": {"bytes": 6, "type": "datetime"}
+                    }
+                }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "history_routes": {
+            "header": "#R",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "id": {"bytes": 2, "type": "unsigned"},
+                        "codigo": {"bytes": 0, "type": "string"},
+                        "timestamp": {"bytes": 6, "type": "datetime"}
+                    }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        },
+        "history_settings": {
+            "header": "#S",
+            "server": {
+                "items": {
+                    "type": "array",
+                    "array": {
+                        "nombre": {"bytes": 0, "type": "string"},
+                        "tipo": {"bytes": 0, "type": "string"},
+                        "data": {"bytes": 0, "type": "string"},
+                        "timestamp": {"bytes": 6, "type": "datetime"}
+                    }
+                },
+                "next": {"bytes": 1, "type": "char"}
+            },
+            "client": {
+                "tabla": {"bytes": 1, "type": "char"},
+                "faltantes": {"bytes": 4, "type": "unsigned"},
+                "timestamp":{"bytes": 6, "type": "timestamp"}
+            }
+        }
+    }
+}
