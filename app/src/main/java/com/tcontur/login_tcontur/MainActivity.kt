@@ -1,42 +1,34 @@
 package com.tcontur.login_tcontur
 
-import android.content.Context
-import android.os.Build
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.ftpos.library.smartpos.crypto.Crypto
-import com.ftpos.library.smartpos.device.Device
-import com.ftpos.library.smartpos.servicemanager.OnServiceConnectCallback
-import com.ftpos.library.smartpos.servicemanager.ServiceManager
 import com.tcontur.login_tcontur.ui.core.NavigationWrapper
-import com.tcontur.login_tcontur.ui.core.protobin.DeviceRegistry
+//import com.tcontur.login_tcontur.ui.data.bd.AppDatabase
+//import com.tcontur.login_tcontur.ui.data.bd.repository.LoginRepository
+import com.tcontur.login_tcontur.ui.data.manager.DeviceManager
 import com.tcontur.login_tcontur.ui.theme.TconturTheme
 import java.util.TimeZone
 
 class MainActivity : ComponentActivity() {
-
-    //    var device: Device
-    var crypto: Crypto? = null
-
+//    val database by lazy { AppDatabase.getDatabase(this) }
+//    val loginRepository by lazy { LoginRepository(database.loginDao()) }
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         TimeZone.setDefault(TimeZone.getTimeZone("America/Lima"))
-        DeviceRegistry.init(this)
+        DeviceManager.init(this)
+
+//        startKoin {
+//            androidLogger()
+//            androidContext(this@MainActivity)
+//            modules(
+//                appModule, dataModule, appViewModule
+//
+//            )
+//        }
+
 //        device = DeviceRegistry.device
 //        mContext = this
 //        getDeviceModel()

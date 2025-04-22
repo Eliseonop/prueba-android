@@ -9,5 +9,6 @@ data class NavigateCard(
     val description: String,
     val icon: ImageVector,
     val color: Color,
-    val route: AppRoute
+    val route: AppRoute,
+    val enabled: Boolean
 )

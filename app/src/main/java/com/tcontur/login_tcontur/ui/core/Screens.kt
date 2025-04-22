@@ -21,4 +21,10 @@ sealed class AppRoute(val route: String) {
 
     @Serializable
     object ProtoRoute: AppRoute("proto")
+
+    @Serializable
+    object QrScanRoute: AppRoute("qrscanner")
+
+    @Serializable
+    object SplashRoute: AppRoute("splash")
 }

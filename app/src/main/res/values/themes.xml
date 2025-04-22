@@ -2,4 +2,5 @@
 <resources>
 
     <style name="Theme.Login_tcontur" parent="android:Theme.Material.Light.NoActionBar" />
+
 </resources>

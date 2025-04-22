@@ -1,5 +1,6 @@
 package com.tcontur.login_tcontur.ui.data.manager
-import android.graphics.Bitmap
+
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import com.ftpos.library.smartpos.errcode.ErrCode
@@ -15,9 +16,7 @@ class PrinterManager(private val printer: Printer) {
     private val TAG = "PrinterManager"
 
     fun imprimir(
-        text: String,
-        onComplete: (() -> Unit)? = null,
-        onError: ((Int, String?) -> Unit)? = null
+        text: String, onComplete: (() -> Unit)? = null, onError: ((Int, String?) -> Unit)? = null
     ) {
         var ret = printer.open()
         if (ret != ErrCode.ERR_SUCCESS) {
@@ -88,36 +87,83 @@ class PrinterManager(private val printer: Printer) {
         printer.printStr("Estado de la impresora: $result")
     }
 
-    fun imprimirTicket(ticketData: TicketData, qrBitmap: Bitmap) {
+    fun imprimirTicket(
+        ticketData: TicketData,
+        onSuccess: (() -> Unit)? = null,
+        onError: ((Int, String?) -> Unit)? = null
+    ) {
+        var ret: Int
         printer.open()
         printer.startCaching()
 
-        printer.setAlignStyle(0x01)
-        printer.printStr(ticketData.empresa)
-        printer.setAlignStyle(0x04)
-        printer.printStr(ticketData.ticket)
+        printer.setGray(3)
 
-        printer.setAlignStyle(0x01)
-        printer.printStr("RUC: ${ticketData.ruc}")
+        val printStatus = PrintStatus()
+        ret = printer.getStatus(printStatus)
+        if (ret != ErrCode.ERR_SUCCESS) {
+            Log.e(TAG, "getStatus failed errCode = 0x${ret.toString(16)}")
+            onError?.invoke(ret, "No se pudo obtener estado de la impresora")
+            return
+        }
 
-        printer.setAlignStyle(0x01)
-        printer.printStr(ticketData.concepto)
-        printer.setAlignStyle(0x04)
-        printer.printStr("S/ ${ticketData.monto}")
-        printer.setFont(Bundle()) // restaurar fuente
+        printer.setLCDFlicker(1)
 
-        printer.setAlignStyle(0x01)
-        printer.printStr("UNIDAD: ${ticketData.unidad}    ${ticketData.metodoPago}")
+        printer.setAlignStyle(AlignStyle.PRINT_STYLE_LEFT)
+        printer.printStr(ticketData.empresa?.uppercase() + "\n")
+        printer.setAlignStyle(AlignStyle.PRINT_STYLE_RIGHT)
+        printer.printStr(ticketData.ruta + "\n")
+        printer.printStr("RUC: ${ticketData.ruc}" + "\n")
 
-        printer.printStr("TCK: ${ticketData.ticket}    ${ticketData.hora} ${ticketData.fecha}")
+        asingBundle("DEFAULT", Typeface.NORMAL, 0, 42)
+        printer.setAlignStyle(AlignStyle.PRINT_STYLE_LEFT)
+        printer.printStr("PROMO/ESC")
+        printer.setAlignStyle(AlignStyle.PRINT_STYLE_RIGHT)
+        printer.printStr("S/ ${ticketData.monto}" + "\n")
 
-        printer.setAlignStyle(0x02)
-        printer.printStr("ID: ${ticketData.id}")
+        asingBundle("DEFAULT", Typeface.NORMAL, 0, 24)
+        printer.setAlignStyle(AlignStyle.PRINT_STYLE_LEFT)
+        printer.printStr("UNIDAD: ${ticketData.unidad}    ${ticketData.metodoPago}" + "\n")
+        printer.printStr("TCK: ${ticketData.ticket}     ${ticketData.fecha} ${ticketData.hora}" + "\n")
 
-        // printer.printBmp(qrBitmap)
+        printer.setAlignStyle(AlignStyle.PRINT_STYLE_CENTER)
+        printer.printStr("ID: ${ticketData.id}" + "\n")
+        printer.printStr("\n")
 
-        printer.feed(30)
-        printer.print(null)
-        printer.close()
+        ret = printer.usedPaperLenManage
+        if (ret < 0) {
+            Log.e(TAG, "usedPaperLenManage failed errCode = 0x${ret.toString(16)}")
+        }
+
+        printer.printWithFeed(40, object : OnPrinterCallback {
+            override fun onSuccess() {
+                printer.close()
+                Log.e(TAG, "Success printer")
+                onSuccess?.invoke()
+            }
+
+            override fun onError(p0: Int) {
+                Log.e(TAG, "Error al imprimir: $p0")
+                onError?.invoke(p0, "Revisar la impresora")
+            }
+        })
     }
+
+    fun asingBundle(
+        font: String = "DEFAULT",
+        format: Int = Typeface.NORMAL,
+        style: Int = Typeface.NORMAL,
+        size: Int = 32
+    ) {
+        val bundle = Bundle()
+        bundle.putString("font", font)
+        bundle.putInt("format", format)
+        bundle.putInt("style", style)
+        bundle.putInt("size", size)
+        val ret = printer.setFont(bundle)
+        if (ret != ErrCode.ERR_SUCCESS) {
+            Log.d("BUNDLE", "Set default font fail " + String.format(" errCode = 0x%x\n", ret))
+            return
+        }
+    }
+
 }

@@ -16,14 +16,14 @@ import com.ftpos.library.smartpos.buzzer.Buzzer
 import com.ftpos.library.smartpos.buzzer.BuzzerMode
 import com.ftpos.library.smartpos.errcode.ErrCode
 import com.tcontur.login_tcontur.ui.data.manager.PrinterManager
-import com.tcontur.login_tcontur.ui.core.protobin.DeviceRegistry
+import com.tcontur.login_tcontur.ui.data.manager.DeviceManager
 
 @Composable
 fun FeitianSdkScreen() {
     val context = LocalContext.current
     var sdkVersion by remember { mutableStateOf("Presiona el botón") }
     var mensaje by remember { mutableStateOf("") }
-    val printer = PrinterManager(DeviceRegistry.printer)
+    val printer = PrinterManager(DeviceManager.printer)
     // ⚠️ Inicializa el PrinterManager
     LaunchedEffect(Unit) {
 //        PrinterManager.init(context)
@@ -59,7 +59,7 @@ fun FeitianSdkScreen() {
         }) {
             Text("Imprimir versión SDK")
         }
-        BuzzerControlPanel(buzzer = DeviceRegistry.buzzer)
+        BuzzerControlPanel(buzzer = DeviceManager.buzzer)
 //        Button(onClick = {
 //            val buzzer = DeviceRegistry.buzzer
 //            buzzer.beep(1000, 1000, 1, 1)
@@ -76,7 +76,7 @@ fun FeitianSdkScreen() {
 
 fun getSDKVersion(context: Context): String {
     return try {
-        val deviceInstance = DeviceRegistry.device
+        val deviceInstance = DeviceManager.device
         val sdkVersion = deviceInstance.sdkVersionName
         return sdkVersion ?: "SDK no disponible"
     } catch (e: Exception) {

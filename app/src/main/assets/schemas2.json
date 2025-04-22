@@ -30,8 +30,7 @@
                  "order": {"bytes": 1, "type": "unsigned"},
                  "logged": {"type": "bool"},
                  "data": {"type": "datetime"},
-                 "schedule": {"type": "time"},
-                 "display": {"type": "bool"}
+                 "schedule": {"type": "time"}
              }
         },
         "report": {

@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.jetbrainsKotlinSerialization)
-    alias(libs.plugins.hilt)
     kotlin("kapt")
 }
 
@@ -45,8 +44,20 @@ android {
     }
 }
 
+
 dependencies {
-    implementation(libs.hilt.android)
+    kapt(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.runtime)
+    implementation(libs.accompanist.permissions )
+    implementation(libs.mlkit.barcode.scanning)
+    implementation(libs.camera.view)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.core)
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.jackson.databind)
     implementation(libs.compose.material.icons.extended)
     implementation(libs.okhttp.logging.interceptor)
@@ -72,6 +83,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.activity)
     implementation(files("libs/FTSDK_api_V1.0.1.11_20241029.jar"))
+    implementation(libs.vision.common)
     implementation(files("libs\\protobin-1.0-SNAPSHOT.jar"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
